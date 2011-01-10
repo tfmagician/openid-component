@@ -1,15 +1,15 @@
 <?php
 /**
  * A simple OpenID consumer component for CakePHP.
- * 
+ *
  * Depends on version 2.2.2 of the PHP OpenID library (http://openidenabled.com/php-openid/)
- * 
+ *
  * To use the MySQLStore, the following steps are required:
- * - run the openid.sql script to create the required tables 
+ * - run the openid.sql script to create the required tables
  * - use one of the following config settings when adding the component to the $components array of your controller(s):
  *     public $components = array('Openid' => array('use_database' => true)); // uses the "default" database configuration
  *     public $components = array('Openid' => array('database_config' => 'name_of_database_config'));
- * 
+ *
  * To accept Google Apps OpenIDs, use the following config setting:
  *     public $components = array('Openid' => array('accept_google_apps' => true));
  *
@@ -293,15 +293,13 @@ class OpenidComponent extends Object {
 
     private function showFormWithAutoSubmit($request, $returnTo, $realm) {
         $formId = 'openid_message';
-        $formHtml = $request->formMarkup($realm, $returnTo, false , array('id' => $formId));
+        $html = $request->htmlMarkup($realm, $returnTo, false , array('id' => $formId));
 
-        if (Auth_OpenID::isFailure($formHtml)) {
-            throw new Exception('Could not redirect to server: '.$formHtml->message);
+        if (Auth_OpenID::isFailure($html)) {
+            throw new Exception('Could not redirect to server: '.$html->message);
         }
 
-        echo '<html><head><title>' . __('OpenID Authentication Redirect', true) . '</title></head>'.
-             "<body onload='document.getElementById(\"".$formId."\").submit()'>".
-             $formHtml.'</body></html>';
+        echo $html;
         exit;
     }
 
